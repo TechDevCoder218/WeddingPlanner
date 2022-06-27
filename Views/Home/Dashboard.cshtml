@@ -1,0 +1,74 @@
+@model Wedding
+
+<div class="row text-center">
+    <div class="col-6">
+        <h1>Welcome to the Wedding Planner</h1>
+    </div>
+    <div class="col-6" style="margin-top: 20px;">
+        <a href="/" >Log Out</a>
+    </div>
+</div>
+
+<table class="table table-striped">
+        <tr>
+            <th>Wedding</th>
+            <th>Date</th>
+            <th>Guest</th>
+            <th>Action</th>
+        </tr>
+        @foreach(Wedding Wedding in ViewBag.AllWeddings)
+        {
+            string str = Wedding.WedderOne;
+            string str2 = Wedding.WedderTwo;
+            string firstname;
+            string secondname;
+            if(str.Contains(" "))
+            {
+                firstname = str.Remove(str.IndexOf(' '));
+                Wedding.WedderOne = firstname;
+            }
+
+            if(str2.Contains(" "))
+            {
+                secondname = str2.Remove(str2.IndexOf(' '));
+                Wedding.WedderTwo = secondname;
+            }
+            string formattedDate = $"{@Wedding.WedDate:MMM} {@Wedding.WedDate.Day} {@Wedding.WedDate.Year} ";
+            <tr>
+                <td><a href="/showwedding/@Wedding.WeddingId">@Wedding.WedderOne & @Wedding.WedderTwo</a></td>
+                <td>@formattedDate</td>
+                <td>@Wedding.GuestsInWedding.Count()</td>
+                @if(@Wedding.Creator == ViewBag.loggedInUser)
+                {
+                    <td><a href="deletewedding/@Wedding.WeddingId">Delete</a></td>
+                } else {
+                    @if(@Wedding.GuestsInWedding.Count() > 0)
+                    {
+                        bool isFound = false;
+                        foreach(GuestList c in Wedding.GuestsInWedding)
+                        {
+                            if(ViewBag.LoggedInUser == c.UserId)
+                            {
+                                <td><a href="unrsvp/@c.WeddingId">Un-RSVP</td> 
+                                isFound = true;
+                            }
+                        }
+                        if(isFound == false)
+                        {
+                            <td><a href="addrsvp/@Wedding.WeddingId">RSVP</a></td>
+                        }
+                    }else{
+                        <td><a href="addrsvp/@Wedding.WeddingId">RSVP</a></td>
+                    }
+                }
+                
+            </tr>
+        }
+</table>
+<div class="row text-start">
+    <form action="/create" method="get">
+        <div class="form-group" style="margin-top: 20px;">
+            <input type="submit" value="New Wedding">
+        </div>
+    </form>
+</div>

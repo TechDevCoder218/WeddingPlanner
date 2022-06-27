@@ -1,0 +1,23 @@
+@model Wedding
+
+<div class="row text-start">
+    <div class="col-6">
+        <h1  style="margin-left: 50px;">@Model.WedderOne and @Model.WedderTwo's Wedding</h1>
+    </div>
+    <div class="col-6" style="margin-top: 20px;">
+        <a href="/dashboard" style="margin-right: 30px;" >Dashboard</a>
+        <a href="/" >Log Out</a>
+    </div>
+</div>
+<div class="row text-start">
+    @{
+        string formattedDate = $"{@Model.WedDate:MMMM} {@Model.WedDate.Day}, {@Model.WedDate.Year}";
+    
+        <h2 style="margin-top: 20px; margin-left: 50px;">Date: @formattedDate</h2>
+        <h2 style="margin-top: 20px; margin-left: 50px;">Guests: </h2>
+        @foreach(GuestList c in @Model.GuestsInWedding)
+        {
+            <h3 style="margin-top: 10px; margin-left: 70px; color: blue;">@c.User.FirstName @c.User.LastName</h3>
+        }
+    }
+</div>
